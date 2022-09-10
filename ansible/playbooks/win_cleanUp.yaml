@@ -1,0 +1,24 @@
+---
+- name: Windows Cleanup
+  hosts: all
+
+  tasks:
+  - name: Enable realtime monitoring
+    ansible.windows.win_powershell:
+      script: |
+        Set-MpPreference -DisableRealtimeMonitoring $false
+
+  - name: Checking Defender Settings
+    ansible.windows.win_powershell:
+      script: |
+        $Preferences = Get-MpPreference
+        $Preferences.DisableRealtimeMonitoring
+    register: host_out
+
+  - debug:
+      var: host_out.output
+
+  - name: Removes Malware
+    ansible.windows.win_file:
+      path: C:\winmal.exe
+      state: absent

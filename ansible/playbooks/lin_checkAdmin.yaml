@@ -1,0 +1,48 @@
+---
+- name: Doing Admin Check
+  hosts: all
+#  vars:
+#    ansible_password: "{{ passwd_pfx + adm_passwd }}"
+#    ansible_user: "{{ adm_name }}"
+  vars:
+    ansible_password: "{{ passwd_pfx + usr_passwd }}"
+    ansible_user: "{{ usr_name }}"
+    ansible_connection: ssh
+
+  tasks:
+
+  - name: Check if User is sudoer
+    ansible.builtin.command: groups
+ #   become: yes
+ #   become_method: runas
+ #   become_user: "{{ usr_name }}"
+ #   vars:
+ #     ansible_become_pass: "{{ passwd_pfx + usr_passwd }}"
+    register: results
+
+  - name: Print output
+    ansible.builtin.debug:
+      var: results.stdout_lines
+    
+  - name: Whaling attack
+    block:
+    - set_fact:
+        r: "{{  21 | random(start=19) }}"
+      run_once: yes
+
+    - name: Print 20 sided Die Result
+      ansible.builtin.debug:
+        var: r
+
+    - name: "End play if admin"
+      debug:
+        msg: "{{ usr_name }} is an admin user"
+
+    - name: Ending play
+      ansible.builtin.meta: end_play
+      when: r != '20'
+
+    - name: Whaling Attack Success
+      debug:
+        msg: "You're gonna need a bigger boat"
+    when: (results.stdout is search("IT") or results.stdout is search("sudo") or results.stdout is search("wheel"))
