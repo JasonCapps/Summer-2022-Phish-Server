@@ -9,6 +9,7 @@ from openpyxl import load_workbook
 import re
 from optparse import OptionParser
 import ipaddress
+import sys
 
 class Computer:
     def __init__(self, name, osType):
@@ -173,22 +174,38 @@ for host in hostCol:
 
 buildPrefix(B, infoCol, teamHosts)
 
+#This is because I am lazy and I didn't want to reformat my code to properly print to a file, replaced the original
+#stdout with sys.stdout
+original_stdout = sys.stdout
 
-print("all:\n  children:")
-for x in range(int((sheet.max_column-3)/2)):
-#for x in range(2):
-    printHostGroups(exerciseDomains,teamHosts,teamName.lower())
+with open(options.outputName, 'w') as f:
+    sys.stdout = f
+
+    print("all:\n  children:")
+    for x in range(int((sheet.max_column-3)/2)):
+        printHostGroups(exerciseDomains,teamHosts,teamName.lower())
+        
+        if x != int(((sheet.max_column-3)/2)-1):
+            i = ord(hostColIterator[0])
+            i += 2
+            hostColIterator = chr(i)
+            infoColIterator = chr(i + 1)
+            
+            hostCol = sheet[hostColIterator]
+            teamName = hostCol[0].value
+            infoCol = sheet[infoColIterator]
+            
+            rebuildExerciseDomains(exerciseDomains, infoCol, B)
+            rebuildTeamHosts(exerciseDomains, teamHosts, B, osType, hostCol, 
+                             infoCol)     
     
-    if x != int(((sheet.max_column-3)/2)-1):
-        i = ord(hostColIterator[0])
-        i += 2
-        hostColIterator = chr(i)
-        infoColIterator = chr(i + 1)
-        
-        hostCol = sheet[hostColIterator]
-        teamName = hostCol[0].value
-        infoCol = sheet[infoColIterator]
-        
-        rebuildExerciseDomains(exerciseDomains, infoCol, B)
-        rebuildTeamHosts(exerciseDomains, teamHosts, B, osType, hostCol, 
-                         infoCol)     
+    #At the end prints all of the windows hosts into their own windows groups
+    print("    windows:\n      children:")
+    for win in windowsGroup:
+        print(f"        {win}")
+    print("      vars:\n"
+          "        ansible_connection: winrm\n"
+          "        ansible_port: 5985\n"
+          "        ansible_winrm_transport: ntlm")
+
+    sys.stdout = original_stdout
