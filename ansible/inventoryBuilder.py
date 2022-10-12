@@ -40,7 +40,7 @@ def printHostGroups(exerciseDomains,teamHosts,teamName):
                 print(f"        {host.name}.{domain}.{teamName}:")
         else:
             print(f"    {domain}_{teamName}_windows:")
-            windowsGroup.append(f"{domain}_{teamName}_windows:")
+            windowsGroup.append(f"{domain}_{teamName}_windows")
             print(f"      vars:\n"
                   f"        passwd_pfx: \"{teamHosts[domain]['prefix']}\"\n"
                   f"        domain_name: {domain[:3]}{teamName[:3]}\n"
@@ -202,7 +202,7 @@ with open(options.outputName, 'w') as f:
     #At the end prints all of the windows hosts into their own windows groups
     print("    windows:\n      children:")
     for win in windowsGroup:
-        print(f"        {win}")
+        print(f"        {win}:")
     print("      vars:\n"
           "        ansible_connection: winrm\n"
           "        ansible_port: 5985\n"
