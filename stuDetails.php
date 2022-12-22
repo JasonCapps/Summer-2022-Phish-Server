@@ -115,56 +115,85 @@ div.third {
 }
 
 </style>
+        <link rel="stylesheet" href="scss/bootstrap.min.css">
+        <script src="dependencies/bootstrap.min.js"></script>
+        <script src="jquery.js"></script>
 </head>
   <!-- Create the 5 menu buttons to navigate each of the professor php files -->
   <body style = "background-color: #EAEAED";>
-    <div class="first">
-      <form method = "POST" action="studentDashboard.php">
-        <input type="submit" class="submit-button2" value="Dashboard">
-      </form>
+<nav class="navbar navbar-expand shadow" style="background-color: #e3f2fd;">
+  <div class="container-fluid">
+    <a class="navbar-brand">
+      <img src="img/logo.jpg" alt="Logo" width="60" height="48" class="d-inline-block align-text-top">
+    </a>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-link" href="studentDashboard.php">Dashboard</a>
+        <a class="nav-link" href="goPhish.php">Go-Phish</a>
+        <a class="nav-link" href="logout.php">Logout</a>
+      </div>
     </div>
-    <div class="first">
-      <form method = "POST" action="goPhish.php">
-        <input type="submit" class="submit-button2" value="Go-Phish">
-      </form>
-    </div>
-    </div>
-    <div class="first">
-      <form method = "POST" action="logout.php">
-        <input type="submit" class="submit-button2" value="Logout">
-      </form>
-    </div>        
+  </div>
+</nav>
     <!-- Use our declared variables to output all of the data retrieved from the query to the page -->
-    <div sytle= "position:absolute; top 70px;">
-      	<div class = 'column-left'>
-      		Phish Title: <input type="text" name="title" value="<?php echo $name ?>"readonly><br>
-      		Date and Time Submitted: <input type="text" name="date" value="<?php echo $date ?>"readonly><br>
-      		Message: <textarea name="message" id ="message"cols="50" rows="5" readonly><?php echo $message ?></textarea><br>
-      	</div><div class = 'column-center'>
-      		Victim Hostname: <input type="text" name="hostname" value="<?php echo $hostname ?>"readonly><br>
-      		Target OS: <input type="text" name="hostname" value="<?php echo $os ?>"readonly><br>
-      		Victim Username: <input type="text" name="username" value="<?php echo $username ?>"readonly><br>
-      		File Name: <input type="text" name="fileName" value="<?php echo $file ?>"readonly><br>
-      		Command: <input type="text" name="command" value="<?php echo $command ?>"readonly>
-      	</div><div class = 'column-right'>
-      		Current Approval Status: <input type="text" name="status" value="<?php echo $approval ?>"readonly><br>
-      		Grade: <input type="text" name="grade" value="<?php echo $grade ?>"readonly><br>
-      		Professor Comments: <br><textarea name="comments" id ="comments"cols="50" rows="5" readonly><?php echo $comment ?></textarea><br>
-      	</div>
+
+   <div class="container-fluid py-4">
+     <div class="row gy-3">
+       <div class="col-xxl">
+         <label class="form-label">Phish Title</label>
+         <input type="text" class="form-control w-100" name="title" value="<?php echo $name ?>"readonly>
+         <label class="form-label">Date and Time Submitted</label>
+         <input type="text" class="form-control w-100" name="date" value="<?php echo $date ?>"readonly>
+         <label class="form-label">Message</label>
+         <textarea class="form-control" rows="6" readonly><?php echo $message ?></textarea>
+       </div>
+       <div class="col-md">
+                <label class="form-label">Victim Hostname </label>
+                <input type="text" name="hostname" class="form-control w-100" value="<?php echo $hostname ?>"readonly>
+                <label class="form-label">Target OS </label>
+                <input type="text" name="hostname" class="form-control w-100" value="<?php echo $os ?>"readonly>
+                <label class="form-label">Victim Username</label>
+                <input type="text" name="username" class="form-control w-100" value="<?php echo $username ?>"readonly>
+                <label class="form-label">File Name </label>
+                <input type="text" name="fileName" class="form-control w-100" value="<?php echo $file ?>"readonly>
+                <label class="form-label">Phishing Link </label>
+                <input type="text" name="command" class="form-control w-100" value="<?php echo $command ?>"readonly>
+       </div>
+       <div class="col-xl">
+        <form method = "POST" action="changeStatus.php">
+        <input type="hidden" id="id" name="id" value="<?php echo $id ?>">
+        <div class="row gy-3">
+          <div class="col-sm-2">
+            <label class="form-label">Current Status: </label>
+          </div>
+          <div class="col-sm-4">
+            <input type="text" class="form-control" value="<?php echo $approval ?>"  style="max-width: 7.75rem" readonly></input>
+          </div>
+        </div>
+        <div class="row gy-3">
+          <div class="col-sm-2">
+            <label class="form-label">Current Grade: </label>
+          </div>
+          <div class="col-sm-4">
+            <input type="text" class="form-control"  style="max-width: 7.75rem" value="<?php echo $grade ?>" readonly></input>
+          </div>
+        </div>
+        <label class="form-label">Comments </label><textarea name="comments" id ="comments" class="form-control" rows="6" readonly><?php echo $comment ?></textarea><br>
+      </form>
+     </div>
     </div>
-    <!-- Retrieve the log file (if it exists) of the phishing attack once it's run by the professor and display it -->
-    <div style="text-align: center;
-	display: inline-block;
-	position: absolute;
-	outline: solid black 1px;
-	background-color: white;
-	overflow: auto;
-	width: 1000px;
-	top: 70%;
-	left: 50%;
-	transform: translate(-50%, -50%)">
-      		<?php readfile("/usr/local/phish/logs/" . "$logs"); ?>      		
-      	</div>
+   </div>
+
+<div class="container-fluid">
+  <div class="row d-flex justify-content-md-center justify-content-start py-5">
+    <div class="card" style="min-width: 45rem; width: 60rem;">
+      <div class="card-body">
+          <?php readfile("/usr/local/phish/logs/" . "$logs"); ?>
+      </div>
+    </div>
+  </div>
+</div>
+
 </body>
 <html>
 

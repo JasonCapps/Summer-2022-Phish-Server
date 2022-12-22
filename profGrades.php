@@ -2,7 +2,7 @@
 <!-- This page provides a collection of all of the graded entries for each team with minimal detail, but retains the ability to display the logs associated with each executed phishing attack -->
 <html>
   <head>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script type="text/javascript" src="jquery.js"></script>
     <script type="text/javascript" src="getGrades.js"></script>
   </head>
   <style>

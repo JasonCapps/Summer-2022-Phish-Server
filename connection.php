@@ -1,8 +1,8 @@
 <?php
 
 $dbserver = "127.0.0.1";
-$dbuser = "moleary";
-$dbpassword = "fishfearme1!";
+$dbuser = "phish";
+$dbpassword = "password1!";
 $dbname = "pond";
 
 $conn = mysqli_connect($dbserver,$dbuser,$dbpassword,$dbname);

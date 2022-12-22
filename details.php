@@ -120,78 +120,160 @@ div.third {
 }
 
 </style>
+	<link rel="stylesheet" href="scss/bootstrap.min.css">
+	<script src="dependencies/bootstrap.min.js"></script>
+	<script src="jquery.js"></script>
 </head>
+<nav class="navbar navbar-expand shadow" style="background-color: #e3f2fd;">
+  <div class="container-fluid">
+    <a class="navbar-brand">
+      <img src="img/logo.jpg" alt="Logo" width="60" height="48" class="d-inline-block align-text-top">
+    </a>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-link" href="profDashboard.php">Dashboard</a>
+        <a class="nav-link" href="logout.php">Logout</a>
+      </div>
+    </div>
+  </div>
+</nav>
   <!-- Create the 5 menu buttons to navigate each of the professor php files, each is linked to their respective php page -->
   <body style = "background-color: #EAEAED";>
-    <div class="first">
-      <form method = "POST" action="profDashboard.php">
-        <input type="submit" class="submit-button2" value="Dashboard">
-      </form>
-    </div>
-    <div class="first">
-      <form method = "POST" action="profGrades.php">
-        <input type="submit" class="submit-button2" value="Grades">
-      </form>
-    </div>
-    <div class="first">
-      <form method = "POST" action="logout.php">
-        <input type="submit" class="submit-button2" value="Logout">
-      </form>
-    </div>
     <!-- HTML form for changing the status AND grade for a phishing attempt; cannot currently change them independently -->
     
     
 <!-- execute button HTML form; like changing the status it operates based on id number selection -->
-    <div style= "position:relative; top:10px; width:280px;">
-      <form method = "POST" action="execute.php">
-        <input type="hidden" id="id" name="id" value="<?php echo $id ?>">
-        <input type="submit" value="!!!Execute!!!" style="color: red;">
-      </form>
+   <div class="container-fluid py-4">
+       <form method = "POST" action="execute.php" id="executeform">
+          <input type="hidden" id="id" name="id" value="<?php echo $id ?>">
+       </form>
+        <button type="submit" id="executeBtn" form="executeform" class="btn btn-danger">!!!EXECUTE!!!</button>
+	<button type="button" data-bs-toggle="modal" data-bs-target="#executeModal" id="executeBtnRedo" class="btn btn-danger" hidden>!!!EXECUTE!!!</button>
     </div>
-      	<div class = 'column-left'>
-      		Phish Title: <input type="text" name="title" value="<?php echo $name ?>"readonly><br>
-      		Date and Time Submitted: <input type="text" name="date" value="<?php echo $date ?>"readonly><br>
-      		Message: <textarea name="message" id ="message"cols="50" rows="5" readonly><?php echo $message ?></textarea><br>
-      	</div><div class = 'column-center'>
-      		Victim Hostname: <input type="text" name="hostname" value="<?php echo $hostname ?>"readonly><br>
-      		Target OS: <input type="text" name="hostname" value="<?php echo $os ?>"readonly><br>
-      		Victim Username: <input type="text" name="username" value="<?php echo $username ?>"readonly><br>
-      		File Name: <input type="text" name="fileName" value="<?php echo $file ?>"readonly><br>
-      		Command: <input type="text" name="command" value="<?php echo $command ?>"readonly>
-      	</div><div class = 'column-right'>
-      	<form method = "POST" action="changeStatus.php">	<!-- this handles the professor's ability to change grade/status/comments -->
+<?php
+	$filename= "/usr/local/phish/logs/$logs";
+	$contents= file_get_contents($filename);
+	if (strlen($contents) > 0) {
+  	echo "<script type='text/Javascript'>
+          document.getElementById('executeBtn').hidden = true
+          document.getElementById('executeBtnRedo').hidden = false
+  	</script>";
+	}
+?>
+   <script>
+     const btn = document.getElementById('executeBtn');
+
+     btn.addEventListener('click', function handleClick() {
+	btn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Loading...`;
+     });
+   </script>
+
+   <div class="container-fluid">
+     <div class="row gy-3">
+       <div class="col-xxl">
+         <label class="form-label">Phish Title</label>
+         <input type="text" class="form-control w-100" name="title" value="<?php echo $name ?>"readonly>
+         <label class="form-label">Date and Time Submitted</label>
+         <input type="text" class="form-control w-100" name="date" value="<?php echo $date ?>"readonly>
+         <label class="form-label">Message</label>
+         <textarea class="form-control" rows="6" readonly><?php echo $message ?></textarea>
+       </div>
+       <div class="col-md">
+		<label class="form-label">Victim Hostname </label>
+		<input type="text" name="hostname" class="form-control w-100" value="<?php echo $hostname ?>"readonly>
+		<label class="form-label">Target OS </label>
+		<input type="text" name="hostname" class="form-control w-100" value="<?php echo $os ?>"readonly>
+                <label class="form-label">Victim Username</label>
+		<input type="text" name="username" class="form-control w-100" value="<?php echo $username ?>"readonly>
+                <label class="form-label">File Name </label>
+		<input type="text" name="fileName" class="form-control w-100" value="<?php echo $file ?>"readonly>
+                <label class="form-label">Phishing Link </label>
+		<input type="text" name="command" class="form-control w-100" value="<?php echo $command ?>"readonly>
+       </div>
+       <div class="col-xl">
+        <form method = "POST" action="changeStatus.php">
         <input type="hidden" id="id" name="id" value="<?php echo $id ?>">
-        <label for="status">Select Status:</label>
-            <select id="status" name="status">
-              <option value=""><?php echo $approval ?></option>
+	<div class="row gy-3">
+	  <div class="col-sm-2">
+            <label for="status" class="form-label">Select Status:</label>
+          </div>
+          <div class="col-sm-4">
+            <select id="status" name="status" class="form-select w-auto">
+              <!-- <option value=""><?php echo $approval ?></option> -->
               <option value="Rejected">Rejected</option>
-	      <option value="Approved">Approved</option>
-            </select><br>
-        <label for="grade">Select Grade:</label>
-            <select id="grade" name="grade">
-              <option value=""><?php echo $grade?></option>
+              <option value="Approved">Approved</option>
+            </select>
+          </div>
+	  <div class="col-sm-2">
+	    <label class="form-label">Current: </label>
+	  </div>
+	  <div class="col-sm-4">
+	    <input type="text" class="form-control" value="<?php echo $approval ?>"  style="max-width: 7.75rem" readonly></input>
+	  </div>
+	</div>
+	<div class="row gy-3">
+	  <div class="col-sm-2">
+            <label for="grade" class="form-label">Select Grade:</label>
+	  </div>
+	  <div class="col-sm-4">
+            <select id="grade" name="grade" class="form-select w-auto">
               <option value="A">A</option>
               <option value="B">B</option>
               <option value="C">C</option>
               <option value="D">D</option>
               <option value="F">F</option>
-            </select><br>
-        Comments: <br><textarea name="comments" id ="comments"cols="50" rows="5"><?php echo $comment ?></textarea><br>
-        <input type="submit" value="Change Status/Grade/Comment">
+            </select>
+	  </div>
+          <div class="col-sm-2">
+            <label class="form-label">Current: </label>
+          </div>
+          <div class="col-sm-4">
+            <input type="text" class="form-control"  style="max-width: 7.75rem" value="<?php echo $grade ?>" readonly></input>
+          </div>
+	</div>
+        <label class="form-label">Comments </label><textarea name="comments" id ="comments" class="form-control" rows="6"><?php echo $comment ?></textarea><br>
+        <input type="submit" class="btn btn-primary" value="Change Status/Grade/Comment">
       </form>
-        <!-- Retrieves the output of running the phishing attack and displays it; if there's no log there's no output -->
-      	<div style="text-align: center;
-	display: inline-block;
-	position: absolute;
-	width: 1000px;
-	outline: solid black 1px;
-	background-color: white;
-	top: 70%;
-	left: 50%;
-	overflow: auto;
-	transform: translate(-50%, -50%);">
-      		<?php readfile("/usr/local/phish/logs/" . "$logs"); ?>      		
-      	</div>  
+     </div>
+    </div>
+   </div>
+
+<div class="container-fluid">
+  <div class="row d-flex justify-content-md-center justify-content-start py-5">
+    <div class="card" style="min-width: 45rem; width: 60rem;">
+      <div class="card-body">
+  	  <?php readfile("/usr/local/phish/logs/" . "$logs"); ?>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="executeModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Confirmation</h1>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>This would be executing the phishing attack again, are you sure you want to do that?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+    	<button type="submit" id="executeBtnConfirmation" form="executeform" class="btn btn-danger">Run It Back</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+     const btnTwo = document.getElementById("executeBtnConfirmation");
+     btnTwo.addEventListener('click', function handleClick() {
+        btnTwo.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Running It Back...`;
+     });
+</script>
 </body>
 <html>
 

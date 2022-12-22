@@ -165,31 +165,44 @@ if($upload_OK == 1){
 	
 
 	//Define our queries for inputting the values into the database
+mysqli_query($conn, "use pond;");
 	
-$sql1 = "INSERT INTO phish(country, name) VALUES('$attacker', '$title')";
-$sql2 = "INSERT INTO grade(approval) VALUES('Pending')";
-$sql3 = "INSERT INTO payload(type, directory, file, command) VALUES('a', '$target_dir', '$target_basename', '$command')";
-$sql4 = "INSERT INTO victim(country, hostname, os, username, message) VALUES('$country', '$hostname', '$os', '$user', '$text');";
+$sql1 = mysqli_prepare($conn, "INSERT INTO phish(country, name) VALUES(?, ?)");
+mysqli_stmt_bind_param($sql1,"ss",$attacker,$title);
+
+$sql2 = mysqli_prepare($conn, "INSERT INTO grade(approval) VALUES(?)");
+$pending = 'Pending';
+mysqli_stmt_bind_param($sql2, "s", $pending);
+
+$sql3 = mysqli_prepare($conn, "INSERT INTO payload(type, directory, file, command) VALUES(?, ?, ?, ?)");
+$type = "a";
+mysqli_stmt_bind_param($sql3, "ssss", $type, $target_dir, $target_basename, $command);
+
+//$sql3 = "INSERT INTO payload(type, directory, file, command) VALUES('a', '$target_dir', '$target_basename', '$command')";
+
+$sql4 = mysqli_prepare($conn, "INSERT INTO victim(country, hostname, os, username, message) VALUES(?, ?, ?, ?, ?);");
+mysqli_stmt_bind_param($sql4, "sssss", $country, $hostname, $os, $user, $text);
+//$sql4 = "INSERT INTO victim(country, hostname, os, username, message) VALUES('$country', '$hostname', '$os', '$user', '$text');";
+
 $sql5 = "INSERT INTO logs(logs) VALUES('');";
 
-mysqli_query($conn, "use pond;");
-if(mysqli_query($conn, $sql1) === false){
+if(mysqli_stmt_execute($sql1) === false){
 	echo "failure" . mysqli_error($conn);
 	}
-if(mysqli_query($conn, $sql2) === false){
+if(mysqli_stmt_execute($sql2) === false){
 	echo "failure" . mysqli_error($conn);
 	}
-if(mysqli_query($conn, $sql3) === false){
+if(mysqli_stmt_execute($sql3) === false){
 	echo "failure" . mysqli_error($conn);
 	}
-if(mysqli_query($conn, $sql4) === false){
+if(mysqli_stmt_execute($sql4) === false){
 	echo "failure" . mysqli_error($conn);
 	}
 if(mysqli_query($conn, $sql5) === false){
 	echo mysqli_error($conn);}
+
 else{
 	header("location: studentDashboard.php");	//re-navigate to the studentDashboard when all is done
-	}						//NOTE: this doesn't actually redirect you to that page, it just loads the page's data
-	
+	}						//NOTE: this doesn't actually redirect you to that page, it just loads the page's data	
 
 ?>

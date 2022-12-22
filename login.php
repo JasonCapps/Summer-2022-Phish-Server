@@ -29,5 +29,7 @@ session_start();
             <input type="submit" value="Login">
 		</div>
 	</form>
+	</br>
+	<img src="/img/phish_img.jpg" alt="Funny image" height="257" width="auto" style="border-radius: 15px;"/>
     </body>
 </html>

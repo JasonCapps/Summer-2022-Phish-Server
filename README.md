@@ -1,3 +1,1 @@
 # Summer-2022-Phish-Server
-
-This project was commissioned by Michael O'Leary, Ph.D as part of an ongoing coordinate internship with students over the course of the Summer of 2022. This repository contains a from-scratch web tool designed to allow students taking part in the case studies course to upload simulated phishing attacks for Professor O'Leary's review. Students are able to upload their own chosen malware along with target specifications and criteria. Upon uploading the attack, the professor is then able to verify the attack's viability and if desired fire the attack directly from the webtool using an ansible-playbook backend.

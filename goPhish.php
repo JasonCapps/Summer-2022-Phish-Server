@@ -14,94 +14,78 @@ if($_SESSION['LoggedIn'] = FALSE){
 
 <html>
 <head>
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+    <script type="text/javascript" src="jquery.js"></script>
     <script type="text/javascript" src="getPhish.js"></script>
+        <link rel="stylesheet" href="scss/bootstrap.min.css">
+        <script src="dependencies/bootstrap.min.js"></script>
 </head>
-<style>
-.submit-button2 {
-	background-color: #4CAF50;
-	border: 1px solid black;
-	font-size: 25px;
-	height: 50px;
-	width: 180px;
-	margin: auto;
-	text-align: center;
-	display: inline-block;
-}
 
-div.first {
-	display: inline-block;
-	width: 180px;
-	height: 50px;
-}
-
-div.second {
-	color: black; 
-	border: 2px solid black;
-	margin: auto;
-	font-size: 24px;
-	text-align: center;
-	position: relative;
-	top: 5px;
-}
-
-div.third {
-	text-align: center;
-	display: inline-block;
-	position: absolute;
-	top: 20%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-}
-
-</style>
 <!-- Website navigation buttons -->
 <body style = "background-color: #EAEAED";>
-    <div class="first">
-        <form method = "POST" action="studentDashboard.php">
-            <input type="submit" class="submit-button2" value="Dashboard">
-        </form>
+<nav class="navbar navbar-expand shadow" style="background-color: #e3f2fd;">
+  <div class="container-fluid">
+    <a class="navbar-brand">
+      <img src="img/logo.jpg" alt="Logo" width="60" height="48" class="d-inline-block align-text-top">
+    </a>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-link" href="studentDashboard.php">Dashboard</a>
+        <a class="nav-link" href="goPhish.php">Go-Phish</a>
+        <a class="nav-link" href="logout.php">Logout</a>
+      </div>
     </div>
-    <div class="first">
-        <form method = "POST" action="goPhish.php">
-            <input type="submit" class="submit-button2" value="Go-Phish">
-        </form>
-    </div>
-    <div class="first">
-        <form method = "POST" action="logout.php">
-            <input type="submit" class="submit-button2" value="Logout">
-        </form>
-    </div>
-    <div>
-    	<!-- An unreasonably large form for collecting all of the details necessary for the phishing attempt. -->
+  </div>
+</nav>
+
+<div class="container-sm py-4">
+  <div class="card shadow">
+    <h5 class="card-header">Complete the following fields for your submission:</h5>
+      <div class="card-body">
         <form id="form-phish" action="getPhish.php" method="POST" enctype="multipart/form-data">
-            <h4> Complete the following fields for your submission: </h4>
-            Title: <input type="text" name="title"><br>
-            <label for="country">Target Country:</label>
-	    <select id="country" name="country">
-	      <option value="france">France</option>
-	      <option value="spain">Spain</option>
+          <label class="form-label">Title</label>
+	  <input type="text" class="form-control" name="title" required placeholder="Name of your phishing email" title="Name of your phishing email"><br>
+          <label class="form-label" for="country">Target Country:</label>
+            <select id="country" class="form-select" name="country">
+              <option value="france">France</option>
+              <option value="spain">Spain</option>
               <option value="germany">Germany</option>
               <option value="england">England</option>
-	      <option value="rome">Rome</option>
-	      <option value="japan">Japan</option>
-	      <option value="china">China</option>
-	      <option value="russia">Russia</option>
+              <option value="rome">Rome</option>
+              <option value="japan">Japan</option>
+              <option value="china">China</option>
+              <option value="russia">Russia</option>
             </select><br>
-            Hostname: <input type="text" name="hostname"><br>
-	    User: <input type="text" name="user"><br>
-	    <label for="os">Operating System:</label>
-	    	<select id="os" name="os">
-	    	<option value="linux">Linux</option>
-	    	<option value="Windows">Windows</option></select></br>
-	    <input type="radio" id="selCommand" name="method" value="Command">
-	    <label for="selCommand">Command</label><br>
-	    <input type="radio" id="selFile" name="method" value="File">
-	    <label for="selFile">File</label><br>
-	    <div id="inputField"></div>
-            Text/Message: <br><textarea name="text" cols="50" rows="10"></textarea><br>
-	    <input type="submit" value="submit">
-	</form>
-    </div>
-</body>
+	  <div class="row g-4">
+	    <div class="col-md-6">
+	      <label class="form-label">Hostname</label>
+	      <input type="text" name="hostname" class="form-control" placeholder="ex. athens.intel.greece" pattern="[a-z]{1,15}\.[a-z]{1,10}\.[a-z]{1,10}" required title="Lowercase FQDN ex. &quot;athens.intel.greece&quot;">
+	    </div>
+            <div class="col-md-6">
+              <label class="form-label">User</label>
+	      <input type="text" name="user" class="form-control" placeholder="ex. zeus" pattern="[a-z]{1,10}" required title="Lowercase username ex. zeus">
+            </div>
+	    <div class="col-md-2">
+              <label class="form-label" for="os">Operating System:</label>
+	    </div>
+	    <div class="col-md-10">
+                <select class="form-select" id="os" name="os">
+                <option value="linux">Linux</option>
+                <option value="Windows">Windows</option></select></br>
+	    </div>
+	    <div class="col-md-2">
+	      <label class="form-label" for="os">File</label>
+	    </div>
+	    <div class="col-md-10">
+	      <input class="form-control" name="fileUpload" type="file" id="fileUpload">
+	    </div>
+	  </div>
+          <label class="form-label">Text/Message</label>
+          <textarea class="form-control" name="text" rows="10" maxlength="5000"></textarea><br>
+            <button type="submit" value="submit" class="btn btn-danger">Submit</button>
+        </form>
+  </div>
+</div>
+</div>
+
+	</body>
 <html>

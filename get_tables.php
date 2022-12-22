@@ -11,12 +11,11 @@ if($_SESSION['LoggedIn'] = FALSE OR $_SESSION['username'] != 'moleary'){
 	
 //Connect to the database
 include("connection.php");
-
 // Retrieve the selected country string value from the javascript file
 $selected_country = $_POST["selected_country"];
-
 // Use our selected team value to make another query to the database. The query mirrors that of the one in profDashboard but with a dynamic value for phish.country.
 
+$_SESSION['country'] = $selected_country;
 $getDB = mysqli_query($conn,"USE pond");
 $getTable = mysqli_query($conn,"SELECT phish.id, phish.name, phish.submit_date, victim.id,
 victim.hostname, victim.username, grade.id, grade.approval, grade.grade FROM phish LEFT JOIN victim on victim.id = phish.id
@@ -27,34 +26,37 @@ LEFT JOIN grade on grade.id = phish.id WHERE phish.country = '$selected_country'
 Below the grade entry, we have the creation of a button that will link each table entry to their respective details page. To do this, we 
 create a form with a hidden value that contains that entries' id as it is stored in the database. We'll then pass this id value to the details.php
 page upon pressing the submit button. */
-echo "<table border='1' style='background-color: white'>
+echo "<table class='table table-hover table-responsive-lg'>
+<thead>
 <tr>
-<th>Title</th>
-<th>Timestamp</th>
-<th>Hostname</th>
-<th>Username</th>
-<th>Approval</th>
-<th>Grade</th>
-<th>Details</th>
-</tr>";
-
+<th scope='col'>Title</th>
+<th scope='col'>Timestamp</th>
+<th scope='col'>Hostname</th>
+<th scope='col'>Username</th>
+<th scope='col'>Approval</th>
+<th scope='col'>Grade</th>
+<th scope='col'>Details</th>
+</tr>
+</thead>
+<tbody>";
 while($row= mysqli_fetch_array($getTable))
 {
 echo "<tr>";
-echo "<td>" . $row['name'] . "</td>";
+echo "<th scope='row'>" . $row['name'] . "</th>";
 echo "<td>" . $row['submit_date'] . "</td>";
 echo "<td>" . $row['hostname'] . "</td>";
 echo "<td>" . $row['username'] . "</td>";
 echo "<td>" . $row['approval'] . "</td>";
 echo "<td>" . $row['grade'] . "</td>";
 echo "<td><form method = 'POST' action = 'details.php'>
-	<input type = 'text' name = 'selectID' value='".$row['id']."' hidden>
-	<button type = 'submit' value='sendID'>Click</button>
-	</form></td>";
+        <input type='text' name='id' value = '$row[id]' hidden>
+        <button type = 'submit' class='btn btn-outline-primary' value='sendID'>Click</button>
+        </form></td>";
 
 echo "</tr>";
 }
+echo "</tbody>";
 echo "</table>";
-
+echo "</div>";
 ?>
 
